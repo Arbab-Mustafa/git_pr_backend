@@ -8,7 +8,7 @@ import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
@@ -106,6 +106,16 @@ async def health_check():
         },
         "debug": settings.DEBUG
     }
+
+
+@app.get("/privacy", tags=["Static"])
+async def privacy_policy():
+    """Serve privacy policy HTML"""
+    import os
+    privacy_path = os.path.join(os.path.dirname(__file__), "privacy.html")
+    if os.path.exists(privacy_path):
+        return FileResponse(privacy_path, media_type="text/html")
+    return {"error": "Privacy policy not found"}
 
 
 # Include routers
