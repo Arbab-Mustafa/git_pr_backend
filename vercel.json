@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "main.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "main.py"
+    }
+  ],
+  "env": {
+    "GROQ_API_KEY": "@groq_api_key",
+    "GROQ_MODEL": "llama-3.3-70b-versatile",
+    "ALLOWED_ORIGINS": "chrome-extension://*",
+    "DEBUG": "false"
+  }
+}
