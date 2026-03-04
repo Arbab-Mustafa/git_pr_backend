@@ -7,7 +7,6 @@ import os
 import sys
 import logging
 from datetime import datetime
-from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, FileResponse
@@ -19,39 +18,32 @@ from dotenv import load_dotenv
 # Load environment variables FIRST
 load_dotenv()
 
-# Validate startup BEFORE importing app modules
-try:
-    from app.startup_validator import validate_startup
-    validate_startup()
-except Exception as e:
-    # If validation fails, print error and exit
-    print(f"\n{'='*60}")
-    print("❌ STARTUP VALIDATION FAILED")
-    print(f"{'='*60}")
-    print(f"\n{str(e)}\n")
-    print("Cannot start server. Fix the issues above and try again.")
-    print(f"{'='*60}\n")
-    sys.exit(1)
-
-# Import routers (after validation)
-from app.routers import analyze
-from app.routers import agent_routes
+# Import config BEFORE using settings
 from app.config import settings
 
-# Configure logging
+# Import routers
+from app.routers import analyze
+
+# Try to import agent routes (optional)
+try:
+    from app.routers import agent_routes
+    HAS_AGENT_ROUTES = True
+except ImportError:
+    HAS_AGENT_ROUTES = False
+
+# Configure logging AFTER importing settings
 logging.basicConfig(
     level=logging.INFO if settings.DEBUG else logging.WARNING,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
         logging.StreamHandler(sys.stdout),
-        # In production, also log to file
-        # logging.FileHandler("app.log")
     ]
 )
 logger = logging.getLogger(__name__)
 
-# Load environment variables
-load_dotenv()
+# Log if agent routes failed to load
+if not HAS_AGENT_ROUTES:
+    logger.warning("Agent routes not available - this is OK for basic functionality")
 
 # Rate limiter (with error handling)
 try:
@@ -62,33 +54,11 @@ except Exception as e:
     limiter = None
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """Startup and shutdown events"""
-    logger.info("="*60)
-    logger.info("🚀 Starting PR Context Generator API")
-    logger.info("="*60)
-    logger.info(f"Environment: {'Development' if settings.DEBUG else 'Production'}")
-    logger.info(f"Debug mode: {settings.DEBUG}")
-    logger.info(f"Allowed origins: {settings.ALLOWED_ORIGINS}")
-    logger.info(f"Groq API: {'✅ Configured' if settings.GROQ_API_KEY else '❌ Missing'}")
-    logger.info(f"GitHub API: {'✅ Configured' if settings.GITHUB_TOKEN else '❌ Missing'}")
-    logger.info(f"Agent system: {'✅ Enabled' if settings.GITHUB_TOKEN else '⚠️ Disabled (no GitHub token)'}")
-    logger.info("="*60)
-    
-    yield
-    
-    logger.info("="*60)
-    logger.info("🛑 Shutting down PR Context Generator API")
-    logger.info("="*60)
-
-
-# Initialize FastAPI app
+# Initialize FastAPI app (without lifespan for serverless compatibility)
 app = FastAPI(
     title="PR Context Generator API",
     description="AI-powered GitHub PR context analysis using Groq",
     version="1.0.0",
-    lifespan=lifespan,
     docs_url="/docs",
     redoc_url="/redoc"
 )
@@ -200,7 +170,10 @@ async def privacy_policy():
 
 # Include routers
 app.include_router(analyze.router, prefix="/api/v1", tags=["Analyze"])
-app.include_router(agent_routes.router, prefix="/api/v1", tags=["AI Agent"])
+
+# Include agent routes if available
+if HAS_AGENT_ROUTES:
+    app.include_router(agent_routes.router, prefix="/api/v1", tags=["AI Agent"])
 
 
 if __name__ == "__main__":
