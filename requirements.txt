@@ -1,0 +1,52 @@
+# ========== Core API Framework ==========
+fastapi==0.109.2
+uvicorn[standard]==0.27.1
+python-dotenv==1.0.1
+pydantic==2.6.1
+pydantic-settings==2.1.0
+httpx==0.26.0
+python-multipart==0.0.9
+slowapi==0.1.9
+
+# ========== AI Agent System ==========
+# LLM Providers
+groq==0.4.2
+openai==1.12.0  # Optional: additional LLM provider
+
+# GitHub Integration
+PyGithub==2.1.1
+
+# Agent Orchestration (Optional - for advanced features)
+# langgraph==0.0.20
+# langchain==0.1.0
+# langchain-core==0.1.0
+
+# ========== Memory & State Management ==========
+# redis==5.0.1  # For production working memory
+# psycopg2-binary==2.9.9  # For PostgreSQL episodic memory
+
+# Vector Database (for semantic memory)
+# pinecone-client==3.0.0  # If using Pinecone
+# weaviate-client==4.4.0  # If using Weaviate
+
+# ========== Monitoring & Observability ==========
+# prometheus-client==0.19.0  # Metrics
+# opentelemetry-api==1.22.0  # Distributed tracing
+# opentelemetry-sdk==1.22.0
+# sentry-sdk[fastapi]==1.40.0  # Error tracking
+
+# ========== Task Queue (for production) ==========
+# celery==5.3.4
+# redis==5.0.1  # Message broker for Celery
+
+# ========== Code Analysis Tools ==========
+# tree-sitter==0.20.4  # AST parsing
+# semgrep==1.45.0  # Security scanning
+# pylint==3.0.3  # Python linting
+# radon==6.0.1  # Code complexity
+
+# ========== Testing ==========
+# pytest==7.4.3
+# pytest-asyncio==0.21.1
+# pytest-cov==4.1.0
+# httpx==0.26.0  # Already listed above

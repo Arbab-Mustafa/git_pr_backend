@@ -1,0 +1,45 @@
+{
+  "ce520a43f9c8040d330899d03a950220": {
+    "id": "ce520a43f9c8040d330899d03a950220",
+    "type": "pr_review_workflow",
+    "pattern": "fetch_pr -> analyze_security -> post_comments -> submit_review",
+    "description": "Successful PR review pattern",
+    "examples": [
+      "PR #123",
+      "PR #456"
+    ],
+    "metadata": {
+      "success_rate": 0.95
+    },
+    "learned_at": "2026-02-27T19:20:41.465094",
+    "usage_count": 0
+  },
+  "dd8cba80f5f90bf505eafcf8cccaf56b": {
+    "id": "dd8cba80f5f90bf505eafcf8cccaf56b",
+    "type": "pr_review_workflow",
+    "pattern": "get_pr_details -> get_pr_details -> get_pr_details -> get_pr_details -> get_pr_details",
+    "description": "Successful workflow for pr_review",
+    "examples": [
+      "{'review_completed': True, 'security_issues_found': 0, 'quality_issues_found': 0, 'test_issues_found': 0, 'comments_posted': 0, 'review_submitted': False, 'total_actions': 15, 'reasoning_steps': 15}"
+    ],
+    "metadata": {
+      "action_count": 15
+    },
+    "learned_at": "2026-02-28T20:14:46.887951",
+    "usage_count": 0
+  },
+  "06f59763e532d38cb6fa91058a3f0658": {
+    "id": "06f59763e532d38cb6fa91058a3f0658",
+    "type": "pr_review_workflow",
+    "pattern": "get_pr_details -> get_pr_files -> check_security_issues -> check_security_issues -> check_security_issues",
+    "description": "Successful workflow for pr_review",
+    "examples": [
+      "{'review_completed': True, 'security_issues_found': 0, 'quality_issues_found': 0, 'test_issues_found': 0, 'comments_posted': 0, 'review_submitted': False, 'total_actions': 15, 'reasoning_steps': 15}"
+    ],
+    "metadata": {
+      "action_count": 15
+    },
+    "learned_at": "2026-02-28T20:12:35.408642",
+    "usage_count": 0
+  }
+}
